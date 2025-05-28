@@ -1,0 +1,15 @@
+{
+  "name": "pastel/shop-api",
+  "autoload": {
+    "psr-4": {
+      "Controllers\\": "controllers/",
+      "Models\\": "models/",
+      "Middleware\\": "middleware/"
+    }
+  },
+  "require": {
+    "bramus/router": "^1.6",
+    "firebase/php-jwt": "^6.10",
+    "vlucas/phpdotenv": "^5.5"
+  }
+}

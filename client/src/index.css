@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom pastel tweaks */
+body { @apply bg-primary-50 text-primary-900; }

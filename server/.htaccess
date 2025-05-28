@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Anything that isn't an existing file or directory → index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+
+# (optional) keep Authorization header if you add JWT-protected endpoints later
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
