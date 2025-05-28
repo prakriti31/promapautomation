@@ -1,5 +1,6 @@
 <?php
 /* Front controller */
+error_log('🔥 router reached: ' . $_SERVER['REQUEST_URI']);
 
 require_once __DIR__ . '/config.php';
 
@@ -18,26 +19,26 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorizatio
 
 /* ---- strip optional /api prefix ---- */
 $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path   = preg_replace('@^/api@', '', $path);     //  /api/signup -> /signup
+$path   = preg_replace('@^/api@', '', $path);
 $method = $_SERVER['REQUEST_METHOD'];
 
-/* ---- very small router ---- */
+/* ---- routing table ---- */
 $routes = [
-    /* auth */
-    ['POST','/signup',  [AuthController::class,'signup']],
-    ['POST','/login',   [AuthController::class,'login']],
+    // Auth routes must reference Controllers\AuthController
+    ['POST',   '/signup',            ['Controllers\AuthController', 'signup']],
+    ['POST',   '/login',             ['Controllers\AuthController', 'login']],
 
-    /* products */
-    ['GET', '/products',           [ProductController::class,'index']],
-    ['POST','/products',           [ProductController::class,'store']],
-    ['DELETE','/products/(\d+)',   [ProductController::class,'destroy']],
+    // Product routes
+    ['GET',    '/products',          ['Controllers\ProductController', 'index']],
+    ['POST',   '/products',          ['Controllers\ProductController', 'store']],
+    ['DELETE', '/products/(\d+)',    ['Controllers\ProductController', 'destroy']],
 ];
 
 foreach ($routes as [$verb, $pattern, $handler]) {
     if ($verb !== $method) continue;
     $regex = '@^' . $pattern . '$@';
     if (preg_match($regex, $path, $m)) {
-        array_shift($m);                    // drop full match
+        array_shift($m);
         return call_user_func_array($handler, $m);
     }
 }

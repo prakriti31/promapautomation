@@ -1,32 +1,25 @@
 import { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';         // named export in jwt-decode v4+
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
-    /* ---------- restore user on page-load ---------- */
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        try {
-            setUser(jwtDecode(token));
-        } catch (err) {
-            console.warn('⚠️  Bad JWT in localStorage → clearing', err.message);
-            localStorage.removeItem('token');   // remove the corrupted value
+        const t = localStorage.getItem('token');
+        if (typeof t === 'string') {
+            try { setUser(jwtDecode(t)); }
+            catch { localStorage.removeItem('token'); }
         }
     }, []);
 
-    /* ---------- helpers ---------- */
-    const login = (token) => {
-        localStorage.setItem('token', token);
+    const login = (t) => {
+        if (typeof t !== 'string') return console.error('Invalid token:', t);
         try {
-            setUser(jwtDecode(token));
-        } catch (err) {
-            // should never happen with a fresh token, but be safe
-            console.error('JWT decode failed on login:', err);
+            localStorage.setItem('token', t);
+            setUser(jwtDecode(t));
+        } catch {
             localStorage.removeItem('token');
         }
     };
