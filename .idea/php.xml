@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/client/vendor/composer" />
+      <path value="$PROJECT_DIR$/client/vendor/sendgrid/sendgrid" />
+      <path value="$PROJECT_DIR$/client/vendor/sendgrid/php-http-client" />
+      <path value="$PROJECT_DIR$/client/vendor/starkbank/ecdsa" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/server/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/server/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/server/vendor/composer" />
+      <path value="$PROJECT_DIR$/server/vendor/bramus/router" />
+      <path value="$PROJECT_DIR$/server/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/server/vendor/firebase/php-jwt" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+</project>
