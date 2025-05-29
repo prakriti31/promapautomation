@@ -1,12 +1,13 @@
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { AuthProvider } from './context/AuthContext';
+import Home from './pages/Home';
+import ProductCatalog from './pages/ProductCatalog';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import ProductCatalog from './pages/ProductCatalog';
 import AdminDashboard from './pages/AdminDashboard';
-import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Home from './pages/Home';
 
 export default function App() {
     return (
@@ -25,7 +26,10 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="*" element={<div className="p-10 text-center text-2xl">404</div>} />
+                <Route
+                    path="*"
+                    element={<div className="p-10 text-center text-2xl">404</div>}
+                />
             </Routes>
         </AuthProvider>
     );

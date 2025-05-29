@@ -7,6 +7,17 @@ require_once __DIR__ . '/config.php';
 use Controllers\AuthController;
 use Controllers\ProductController;
 
+// detect requests for /uploads/...
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+if (preg_match('@^/uploads/(.+)$@', $uri, $m)) {
+    $file = __DIR__ . '/../uploads/' . $m[1];
+    if (is_file($file)) {
+        header('Content-Type: ' . mime_content_type($file));
+        readfile($file);
+        exit;
+    }
+}
+
 /* ---- handle CORS & OPTIONS ---- */
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: *');

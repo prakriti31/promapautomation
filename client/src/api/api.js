@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: '/api', // proxy via Vite to PHP backend
+    maxBodyLength: Infinity,     // allow large file uploads
+    maxContentLength: Infinity,
 });
 
 api.interceptors.request.use((cfg) => {
