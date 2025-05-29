@@ -1,10 +1,31 @@
 <?php
 namespace Controllers;
-
 use Models\User;
 
-class AuthController
-{
+class AuthController {
+    public static function login() {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $email = $input['email'] ?? '';
+        $password = $input['password'] ?? '';
+
+        $user = User::findByEmail($email);
+        if (!$user || !password_verify($password, $user->password_hash)) {
+            jsonResponse(['error' => 'Invalid credentials'], 401);
+            return;
+        }
+
+        $token = User::token($user);
+        // Return role and token
+        jsonResponse([
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role
+            ]
+        ]);
+    }
+
     /* ---------- sign-up (no OTP) ---------- */
     public static function signup()
     {
@@ -35,16 +56,4 @@ class AuthController
         jsonResponse(['token' => User::token($user), 'user' => $user], 201);
     }
 
-    /* ---------- login ---------- */
-    public static function login()
-    {
-        $in   = json_decode(file_get_contents('php://input'), true);
-        $user = User::findByEmail($in['email']);
-
-        if (!$user || !password_verify($in['password'], $user->password_hash)) {
-            jsonResponse(['error' => 'Invalid credentials'], 401);
-        }
-
-        jsonResponse(['token' => User::token($user), 'user' => $user]);
-    }
 }

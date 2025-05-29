@@ -1,37 +1,28 @@
-import { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useContext, useState } from 'react';
+import api from '../api/api';
 
-export const AuthContext = createContext(null);
-
-export default function AuthProvider({ children }) {
+const AuthContext = createContext();
+export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const t = localStorage.getItem('token');
-        if (typeof t === 'string') {
-            try { setUser(jwtDecode(t)); }
-            catch { localStorage.removeItem('token'); }
-        }
-    }, []);
-
-    const login = (t) => {
-        if (typeof t !== 'string') return console.error('Invalid token:', t);
-        try {
-            localStorage.setItem('token', t);
-            setUser(jwtDecode(t));
-        } catch {
-            localStorage.removeItem('token');
-        }
+    const login = async (email, password) => {
+        const res = await api.post('/login', { email, password });
+        const { token, user: userData } = res.data;
+        localStorage.setItem('token', token);
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setUser(userData);
+        return userData;
     };
-
     const logout = () => {
         localStorage.removeItem('token');
+        delete api.defaults.headers.common['Authorization'];
         setUser(null);
     };
-
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
+}
+export function useAuth() {
+    return useContext(AuthContext);
 }

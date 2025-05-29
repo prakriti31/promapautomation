@@ -32,6 +32,8 @@ $routes = [
     ['GET',    '/products',          ['Controllers\ProductController', 'index']],
     ['POST',   '/products',          ['Controllers\ProductController', 'store']],
     ['DELETE', '/products/(\d+)',    ['Controllers\ProductController', 'destroy']],
+    ['PUT',    '/products/(\d+)',    ['Controllers\ProductController', 'update']],
+    ['GET',    '/orders',             ['Controllers\OrderController', 'index']],
 ];
 
 foreach ($routes as [$verb, $pattern, $handler]) {

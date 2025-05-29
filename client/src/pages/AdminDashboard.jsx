@@ -1,53 +1,38 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ProductForm from '../components/ProductForm';
+import OrderList from '../components/OrderList';
 import api from '../api/api';
 
-export default function AdminDashboard(){
-    const blank={category:'',name:'',description:'',price:'',photo_url:''};
-    const [form,setForm]=useState(blank);
-    const [products,setProducts]=useState([]);
+export default function AdminDashboard() {
+    const [view, setView] = useState('products');
+    const [products, setProducts] = useState([]);
 
-    const load=()=>api.get('/products').then(r=>setProducts(r.data));
-    useEffect(load,[]);
+    const fetchProducts = () => api.get('/products').then(r => setProducts(r.data));
+    useEffect(fetchProducts, []);
 
-    const save= async e=>{
-        e.preventDefault();
-        await api.post('/products',form);
-        setForm(blank); load();
-    };
-    const del= async id=>{
-        if(window.confirm('Delete?')){
-            await api.delete(`/products/${id}`); load();
-        }
-    };
-
-    const handle=e=>setForm({...form,[e.target.name]:e.target.value});
-
-    return(
-        <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-2xl mb-4">Admin Panel</h1>
-
-            <form onSubmit={save} className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                {['category','name','description','price','photo_url'].map(f=>(
-                    <input key={f} name={f} placeholder={f}
-                           className="border p-2 rounded"
-                           value={form[f]} onChange={handle}/>
-                ))}
-                <button className="col-span-full bg-primary-500 text-white p-2 rounded">Add / Update</button>
-            </form>
-
-            <table className="w-full border">
-                <thead className="bg-primary-100">
-                <tr><th>ID</th><th>Name</th><th>Price</th><th>Cat</th><th></th></tr>
-                </thead>
-                <tbody>
-                {products.map(p=>(
-                    <tr key={p.id} className="text-center border-t">
-                        <td>{p.id}</td><td>{p.name}</td><td>{p.price}</td><td>{p.category}</td>
-                        <td><button onClick={()=>del(p.id)} className="text-red-600">🗑</button></td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+    return (
+        <div className="max-w-6xl mx-auto p-4">
+            <div className="flex gap-4 mb-4">
+                <button onClick={() => setView('products')} className={view==='products'?'font-bold':''}>Products</button>
+                <button onClick={() => setView('orders')} className={view==='orders'?'font-bold':''}>Orders</button>
+            </div>
+            {view === 'products' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <ProductForm onSuccess={fetchProducts} />
+                    {products.map(p => (
+                        <div key={p.id} className="border rounded p-4 shadow-sm">
+                            <img src={p.photo_url} alt={p.name} className="h-32 w-full object-cover mb-2"/>
+                            <h3 className="font-bold">{p.name}</h3>
+                            <p>${p.price}</p>
+                            <div className="flex gap-2 mt-2">
+                                <button onClick={() => api.delete(`/products/${p.id}`).then(fetchProducts)} className="text-red-500">Delete</button>
+                                <button onClick={() => {/* implement edit */}}>Edit</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            {view === 'orders' && <OrderList />}
         </div>
     );
 }

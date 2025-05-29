@@ -4,7 +4,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProductCatalog from './pages/ProductCatalog';
 import AdminDashboard from './pages/AdminDashboard';
-import AuthProvider from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 

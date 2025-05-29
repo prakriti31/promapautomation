@@ -1,81 +1,69 @@
-import { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Signup() {
-    const [form, setForm] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-    });
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
-    const { login } = useContext(AuthContext);
-    const nav       = useNavigate();
-
-    const handle = (e) =>
-        setForm({ ...form, [e.target.name]: e.target.value });
-
-    const submit = async (e) => {
+    const handleSubmit = async e => {
         e.preventDefault();
         try {
-            const { data } = await api.post('/signup', form);
-            login(data.token);
-            nav('/');
-        } catch (err) {
-            alert(err.response?.data?.error ?? 'Sign-up error');
+            await api.post('/signup', { name, email, phone, password });
+            const user = await login(email, password);
+            if (user.role === 'ADMIN') {
+                navigate('/admin');
+            } else {
+                navigate('/products');
+            }
+        } catch {
+            alert('Signup failed');
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-primary-50 px-4">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow p-8">
-                <h1 className="text-2xl font-semibold text-center mb-6">
-                    Create account
-                </h1>
-
-                <form onSubmit={submit} className="space-y-4">
-                    <input
-                        name="name"
-                        className="w-full border rounded px-3 py-2"
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={handle}
-                        required
-                    />
-                    <input
-                        name="email"
-                        type="email"
-                        className="w-full border rounded px-3 py-2"
-                        placeholder="Email"
-                        value={form.email}
-                        onChange={handle}
-                        required
-                    />
-                    <input
-                        name="phone"
-                        className="w-full border rounded px-3 py-2"
-                        placeholder="Phone"
-                        value={form.phone}
-                        onChange={handle}
-                        required
-                    />
-                    <input
-                        name="password"
-                        type="password"
-                        className="w-full border rounded px-3 py-2"
-                        placeholder="Password"
-                        value={form.password}
-                        onChange={handle}
-                        required
-                    />
-
-                    <button className="w-full bg-primary-500 text-white rounded py-2">
-                        Sign Up
-                    </button>
-                </form>
-            </div>
-        </div>
+        <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 space-y-4">
+            <h2 className="text-2xl font-bold">Sign Up</h2>
+            <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Name"
+                required
+                className="w-full border rounded p-2"
+            />
+            <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Email"
+                required
+                className="w-full border rounded p-2"
+            />
+            <input
+                type="text"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                placeholder="Phone"
+                required
+                className="w-full border rounded p-2"
+            />
+            <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                className="w-full border rounded p-2"
+            />
+            <button type="submit" className="w-full bg-primary-500 text-white py-2 rounded">
+                Sign Up
+            </button>
+        </form>
     );
 }
