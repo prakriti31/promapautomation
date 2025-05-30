@@ -3,9 +3,49 @@ namespace Controllers;
 use PDO;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Middleware\AuthMiddleware;
 
 class OrderController
 {
+
+    /* ----------------------------------------------------
+      *  ADMIN — list every order with user + item details
+      * -------------------------------------------------- */
+    public static function index()
+    {
+        // allow only ADMINs
+        AuthMiddleware::handle('ADMIN');
+
+        $db = db();
+
+        /* include e-mail + phone from users table */
+        $orders = $db->query("
+            SELECT  o.*,
+                    u.id    AS user_id,
+                    u.name  AS user_name,
+                    u.email AS user_email,
+                    u.phone AS user_phone
+            FROM    orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            ORDER BY o.created_at DESC
+        ")->fetchAll(PDO::FETCH_OBJ);
+
+        /* attach items to each order */
+        $itemStmt = $db->prepare("
+            SELECT  oi.product_id, oi.qty, oi.price, p.name
+            FROM    order_items oi
+            JOIN    products p ON p.id = oi.product_id
+            WHERE   oi.order_id = ?
+        ");
+
+        foreach ($orders as $o) {
+            $itemStmt->execute([$o->id]);
+            $o->items = $itemStmt->fetchAll(PDO::FETCH_OBJ);
+        }
+
+        jsonResponse($orders);
+    }
+
     /* ---------- create new order & send emails ---------- */
     public static function store()
     {
