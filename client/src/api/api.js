@@ -6,6 +6,10 @@ const api = axios.create({
     maxContentLength: Infinity,
 });
 
+const token = localStorage.getItem('token');
+if (token) api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+
 api.interceptors.request.use((cfg) => {
     const token = localStorage.getItem('token');
     if (token) cfg.headers['Authorization'] = `Bearer ${token}`;

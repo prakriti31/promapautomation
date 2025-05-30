@@ -45,6 +45,9 @@ $routes = [
     ['DELETE', '/products/(\d+)',    ['Controllers\ProductController', 'destroy']],
     ['PUT',    '/products/(\d+)',    ['Controllers\ProductController', 'update']],
     ['GET',    '/orders',             ['Controllers\OrderController', 'index']],
+    /* --- append to $routes array --- */
+    ['POST', '/orders', ['Controllers\\OrderController', 'store']],
+
 ];
 
 foreach ($routes as [$verb, $pattern, $handler]) {

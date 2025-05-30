@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import SubcategoryPage from "./pages/SubcategoryPage";
+import CartPage from "./pages/CartPage";
 
 export default function App() {
     return (
@@ -30,6 +32,10 @@ export default function App() {
                     path="*"
                     element={<div className="p-10 text-center text-2xl">404</div>}
                 />
+
+                {/* existing routes */}
+                <Route path="/products/:category/:subcat" element={<SubcategoryPage/>}/>
+                <Route path="/cart" element={<CartPage/>}/>
             </Routes>
         </AuthProvider>
     );
