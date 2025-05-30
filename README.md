@@ -19,6 +19,8 @@ PromapAutomation is a full-stack React (Vite) + PHP application featuring:
    # from the project root
    cd server
    php -S localhost:8000 -t . index.php
+   
+Start the MAMP server and visit - http://localhost:8888/phpMyAdmin5/index.php?route=/database/structure&db=promapautomation
 
 2. **Start the frontend**
 ```bash
