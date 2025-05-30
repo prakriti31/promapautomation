@@ -1,13 +1,18 @@
-import React,{useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/api';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { IndianRupee as Rupee } from 'lucide-react';
+import LoginPrompt from '../components/LoginPrompt';
 
-export default function SubcategoryPage(){
-    const {category,subcat} = useParams();
-    const [items,setItems]=useState([]);
-    const {cart,add,inc,dec}=useCart();
+export default function SubcategoryPage() {
+    const { category, subcat } = useParams();
+    const [items, setItems] = useState([]);
+    const [showPrompt, setShowPrompt] = useState(false);
+
+    const { cart, add, inc, dec } = useCart();
+    const { user } = useAuth();
 
     useEffect(() => {
         api.get('/products').then(r =>
@@ -21,29 +26,48 @@ export default function SubcategoryPage(){
         );
     }, [category, subcat]);
 
+    const handleAdd = p => {
+        if (!user) setShowPrompt(true);
+        else add(p);
+    };
 
     return (
-        <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-xl font-semibold py-4">{category} &gt; {subcat}</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {items.map(p=>{
-                    const inCart=cart[p.id];
+        <div className="mx-auto max-w-6xl px-4">
+            <h2 className="py-4 text-xl font-semibold">
+                {category} &gt; {subcat}
+            </h2>
+
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {items.map(p => {
+                    const item = cart[p.id];
                     return (
-                        <div key={p.id} className="border rounded-xl shadow-sm p-3">
-                            <img src={p.photo_url} alt={p.name} className="h-40 w-full object-cover rounded"/>
+                        <div key={p.id} className="rounded-xl border p-3 shadow-sm">
+                            <img
+                                src={p.photo_url}
+                                alt={p.name}
+                                className="h-40 w-full rounded object-cover"
+                            />
                             <h3 className="mt-2 font-bold">{p.name}</h3>
                             <p className="flex items-center gap-1 text-primary-800">
-                                <Rupee className="w-4 h-4"/>{p.price}
+                                <Rupee className="h-4 w-4" />
+                                {p.price}
                             </p>
-                            {inCart?(
+
+                            {item ? (
                                 <div className="mt-2 flex items-center gap-2">
-                                    <button onClick={()=>dec(p.id)} className="px-2 border rounded">-</button>
-                                    <span>{inCart.qty}</span>
-                                    <button onClick={()=>inc(p.id)} className="px-2 border rounded">+</button>
+                                    <button onClick={() => dec(p.id)} className="rounded border px-2">
+                                        –
+                                    </button>
+                                    <span>{item.qty}</span>
+                                    <button onClick={() => inc(p.id)} className="rounded border px-2">
+                                        +
+                                    </button>
                                 </div>
-                            ):(
-                                <button onClick={()=>add(p)}
-                                        className="mt-2 bg-primary-500 text-white px-3 py-1 rounded w-full">
+                            ) : (
+                                <button
+                                    onClick={() => handleAdd(p)}
+                                    className="mt-2 w-full rounded bg-primary-500 px-3 py-1 text-white"
+                                >
                                     Add to Cart
                                 </button>
                             )}
@@ -51,6 +75,8 @@ export default function SubcategoryPage(){
                     );
                 })}
             </div>
+
+            {showPrompt && <LoginPrompt onClose={() => setShowPrompt(false)} />}
         </div>
     );
 }

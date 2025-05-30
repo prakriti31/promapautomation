@@ -84,3 +84,20 @@ price      DECIMAL(10,2),
 FOREIGN KEY (order_id)  REFERENCES orders(id)    ON DELETE CASCADE,
 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );```
+```
+
+## Overview
+
+All the client-side pieces are loaded in memory:
+
+API layer – Axios instance with auth token header + interceptor.
+
+Contexts – AuthProvider (JWT + localStorage) and CartProvider (object map, qty inc/dec, total calc).
+
+Layout components – Navbar, responsive CategoryNavbar, Tailwind pastel palette.
+
+Pages / flows – home, catalog (with filter pills), category & sub-category pages, cart, login / signup, and protected admin dashboard (add/-edit products, view orders).
+
+Admin utilities – product CRUD form & table, order list.
+
+Routing – Vite/React-Router tree with /products/:category/:subcat, /cart, /admin (guarded), fallback 404.
