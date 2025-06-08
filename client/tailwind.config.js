@@ -1,26 +1,38 @@
-/* eslint-env node */
-import defaultTheme from 'tailwindcss/defaultTheme';
-
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
     content: ['./index.html', './src/**/*.{js,jsx}'],
     theme: {
         extend: {
             colors: {
                 primary: {
-                    50:  '#f4f9fc',
-                    100: '#e9f2f8',
-                    200: '#c9e0f0',
-                    300: '#a8cde8',
-                    400: '#7fb3dd',
-                    500: '#5a9ad1',   // main pastel-blue
-                    600: '#4383b8',
-                    700: '#326594',
-                    800: '#24496b',
-                    900: '#162d43',
+                    50:  '#eff6ff',
+                    100: '#dbeafe',
+                    200: '#bfdbfe',
+                    300: '#93c5fd',
+                    400: '#60a5fa',
+                    500: '#3b82f6',
+                    600: '#2563eb',
+                    700: '#1d4ed8',
+                    800: '#1e40af',
+                    900: '#1e3a8a',
                 },
             },
-            fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            keyframes: {
+                slideshow: {
+                    '0%':   { transform: 'scale(1.1)', opacity: 0 },
+                    '8%':   { opacity: 1 },
+                    '25%':  { transform: 'scale(1)',  opacity: 1 },
+                    '33%':  { opacity: 0 },
+                    '100%': { opacity: 0 },
+                },
+                fadeUp: {
+                    '0%':   { opacity: 0, transform: 'translateY(30px)' },
+                    '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
+            },
+            animation: {
+                slideshow: 'slideshow 20s ease-in-out infinite',
+                fadeUp: 'fadeUp 0.8s ease forwards',
             },
         },
     },
