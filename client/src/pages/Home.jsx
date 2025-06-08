@@ -1,80 +1,89 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import CategoryNavbar from '../components/CategoryNavbar';
 import HeroCarousel   from '../components/HeroCarousel';
-import useReveal      from '../hooks/useReveal';
-import { Link }       from 'react-router-dom';
+import BrandSection   from '../components/BrandSection';
+import InfoBlurb      from '../components/InfoBlurb';
+import SiteFooter     from '../components/SiteFooter';
+
+/* ——— brand data ——— */
+const brands = [
+    {
+        name:  'ABB',
+        logo:  '/photos/ABB_logo.png',
+        text:  `Certified ABB partner for PLCs, LV drives and safety relays.
+            Stock of ACS-880 drives up to 110 kW.
+            Field service and programming support available nationwide.`,
+    },
+    {
+        name:  'AllenBradley',
+        logo:  '/photos/AllenBradley_logo.png',
+        text:  `Complete Allen-Bradley catalogue – MicroLogix, ControlLogix,
+            Kinetix motion drives, PowerFlex inverters.
+            UL-listed enclosure builds and panel retrofits offered on request.`,
+    },
+    {
+        name:  'Siemens',
+        logo:  '/photos/Siemens_logo.png',
+        text:  `TIA-Portal ready SIMATIC S7-1200 / S7-1500 PLCs, SINAMICS G-series drives,
+            and Smart MCC components always in stock.
+            We also provide licensed STEP-7 programming services.`,
+    },
+    {
+        name:  'Nord',
+        logo:  '/photos/Nord_logo.png',
+        text:  `Nord geared motors, Helical-Bevel and Parallel-Shaft options,
+            torque range 10 Nm – 100 kNm. Custom flanges machined in-house.
+            IE3 premium-efficiency motors ship within 48 hours.`,
+    },
+    {
+        name:  'Schneider',
+        logo:  '/photos/Schneider_logo.png',
+        text:  `Schneider Modicon PLCs, Altivar drives and TeSys contactors.
+            Green Premium components with full RoHS & REACH compliance.
+            Panel-builder bundles and OEM tier pricing available.`,
+    },
+];
 
 export default function Home() {
-    const featureRef = useRef(null);
-    const gridRef    = useRef(null);
-    useReveal(featureRef);
-    useReveal(gridRef);
-
-    /* quick helper for category pills */
-    const cats = [
-        { cat: 'PLC',          subs: ['Siemens PLC', 'ABB PLC', 'Schneider PLC', 'Allen Bradley PLC'] },
-        { cat: 'Drives',       subs: ['Siemens', 'ABB'] },
-        { cat: 'Motors',       subs: ['Nord', 'Siemens'] },
-        { cat: 'Power Items',  subs: ['MCCB', 'MCB'] },
-        { cat: 'Cables',       subs: [] },
-    ];
-    const link = (c, s='All') => `/products/${encodeURIComponent(c)}/${encodeURIComponent(s)}`;
-
     return (
         <div className="min-h-screen overflow-x-hidden bg-primary-50 text-primary-900">
             <CategoryNavbar />
-
-            {/* hero slideshow */}
             <HeroCarousel />
 
-            {/* “why us” strip */}
-            <section ref={featureRef} className="mx-auto max-w-6xl px-6 py-16 lg:flex lg:items-center lg:gap-12">
-                <div className="mb-10 flex-1 lg:mb-0">
-                    <h2 className="mb-4 text-3xl font-bold lg:text-4xl">
-                        Your One-Stop Shop for Industrial Automation
-                    </h2>
-                    <p className="text-gray-700 lg:text-lg">
-                        PROMAP Automation brings together the world’s leading brands under one roof,
-                        delivering genuine products, expert support, and rapid fulfillment &mdash;
-                        so you can focus on keeping your plant running.
-                    </p>
-                </div>
-                <ul className="flex-1 space-y-3 text-sm lg:text-base">
-                    <li>✔️  Authorised distributor partnerships</li>
-                    <li>✔️  24-hour dispatch on in-stock items</li>
-                    <li>✔️  Technical assistance from certified engineers</li>
-                    <li>✔️  Bulk pricing for OEMs and integrators</li>
-                </ul>
-            </section>
+            {/* catchy intro before brand list */}
+            <h2 className="scroll-fade mx-auto mt-16 max-w-6xl px-6 text-center text-4xl font-extrabold">
+                Trusted Global Brands&nbsp;&nbsp;•&nbsp;&nbsp;Local Engineering Expertise
+            </h2>
 
-            {/* product grid */}
-            <section ref={gridRef} className="bg-white py-16">
-                <h3 className="mb-8 text-center text-2xl font-semibold">Browse by Category</h3>
-                <div className="mx-auto grid max-w-6xl gap-6 px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                    {cats.map(({ cat, subs }) => (
-                        <Link
-                            key={cat}
-                            to={link(cat)}
-                            className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-primary-200 to-primary-100 p-6 shadow-md transition-transform hover:-translate-y-1"
-                        >
-                            <h4 className="mb-2 text-lg font-bold">{cat}</h4>
-                            {subs.length ? (
-                                <ul className="text-xs leading-snug text-primary-800">
-                                    {subs.slice(0, 3).map(s => (
-                                        <li key={s}>{s}</li>
-                                    ))}
-                                    {subs.length > 3 && <li>…</li>}
-                                </ul>
-                            ) : (
-                                <p className="text-xs text-primary-800">Multiple gauges &amp; specs</p>
-                            )}
+            {/* brand sections */}
+            {brands.map((b, idx) => (
+                <BrandSection
+                    key={b.name}
+                    brand={b.name}
+                    logo={b.logo}
+                    details={b.text}
+                    flip={idx % 2 === 1}
+                />
+            ))}
 
-                            {/* subtle zoom bg */}
-                            <div className="absolute inset-0 -z-10 scale-110 bg-[url('/photos/pic1.jpg')] opacity-0 transition-opacity duration-700 group-hover:opacity-25" />
-                        </Link>
-                    ))}
-                </div>
-            </section>
+            {/* two informational blurbs */}
+            <InfoBlurb
+                title="Explore Our Complete Product Range"
+                text={`From compact PLCs to 100 kNm geared-motor assemblies, PROMAP Automation
+               carries more than 2 000 catalogue items on the shelf. Our application
+               engineers help you choose, configure and commission the right gear
+               without the usual delays.`}
+            />
+
+            <InfoBlurb
+                title="Quality & Reliability You Can Measure"
+                text={`Every component that leaves our warehouse is test-logged, batch-tracked
+               and backed by a minimum 18-month warranty. We partner directly with OEMs
+               and tier-one factories—so you buy genuine parts, every single time.`}
+                flip
+            />
+
+            <SiteFooter />
         </div>
     );
 }
