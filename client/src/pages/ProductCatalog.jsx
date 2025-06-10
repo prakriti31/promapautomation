@@ -1,98 +1,77 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api/api';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import LoginPrompt from '../components/LoginPrompt';
+import { IndianRupee as Rupee } from 'lucide-react';
 
-export default function ProductCatalog({ initialCategory = null }) {
+export default function ProductCatalog() {
     const [products, setProducts] = useState([]);
-    const [selected, setSelected] = useState(initialCategory);
-    const [showPrompt, setShowPrompt] = useState(false);
-
+    const [added, setAdded] = useState({});
     const { cart, add, inc, dec } = useCart();
-    const { user } = useAuth();
 
     useEffect(() => {
         api.get('/products').then(r => setProducts(r.data));
     }, []);
 
-    const categories = [...new Set(products.map(p => p.category))];
-
-    /* ---------- add-to-cart with login check ---------- */
-    const handleAdd = product => {
-        if (!user) {
-            setShowPrompt(true);
-        } else {
-            add(product);
-        }
+    const handleAdd = (p) => {
+        add(p);
+        setAdded((id) => ({ ...id, [p.id]: true }));
+        setTimeout(() => setAdded((id) => ({ ...id, [p.id]: false })), 800);
     };
 
     return (
-        <div className="mx-auto max-w-6xl p-4">
-            {/* category pills */}
-            <div className="mb-6 flex flex-wrap gap-2">
-                {categories.map(cat => (
-                    <button
-                        key={cat}
-                        onClick={() => setSelected(selected === cat ? null : cat)}
-                        className={`rounded-full px-4 py-1 text-sm ${
-                            selected === cat
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-gray-200 hover:bg-gray-300'
-                        }`}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </div>
+        <div className="max-w-6xl mx-auto p-4">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {products.map((p) => {
+                    const inCart = cart[p.id];
+                    const priceNum = Number(p.price) || 0;
+                    return (
+                        <div
+                            key={p.id}
+                            className="fade-in-up bg-white rounded-xl shadow-lg p-4 transition hover:shadow-2xl"
+                        >
+                            <img
+                                src={p.photo_url}
+                                alt={p.name}
+                                className="h-48 w-full object-cover rounded-lg mb-3"
+                            />
+                            <h3 className="font-bold text-lg mb-1">{p.name}</h3>
+                            <p className="text-base text-gray-700 mb-3 flex items-center">
+                                <Rupee className="inline w-5 h-5 mr-1" />
+                                {priceNum.toFixed(2)}
+                            </p>
 
-            {/* product grid */}
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-                {products
-                    .filter(p => !selected || p.category === selected)
-                    .map(p => {
-                        const item = cart[p.id];
-                        return (
-                            <div key={p.id} className="rounded-2xl border p-4 shadow-sm">
-                                <img
-                                    src={p.photo_url}
-                                    alt={p.name}
-                                    className="mb-2 h-40 w-full rounded object-cover"
-                                />
-                                <h3 className="text-lg font-bold">{p.name}</h3>
-                                <p className="mb-2">&#8377;{p.price}</p>
-
-                                {item ? (
-                                    <div className="flex items-center space-x-2">
-                                        <button
-                                            onClick={() => dec(p.id)}
-                                            className="rounded border px-2"
-                                        >
-                                            –
-                                        </button>
-                                        <span>{item.qty}</span>
-                                        <button
-                                            onClick={() => inc(p.id)}
-                                            className="rounded border px-2"
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                ) : (
+                            {inCart ? (
+                                <div className="flex items-center justify-between">
                                     <button
-                                        onClick={() => handleAdd(p)}
-                                        className="rounded bg-primary-500 px-3 py-1 text-white"
+                                        onClick={() => dec(p.id)}
+                                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
                                     >
-                                        Add to Cart
+                                        –
                                     </button>
-                                )}
-                            </div>
-                        );
-                    })}
+                                    <span className="font-medium">{inCart.qty}</span>
+                                    <button
+                                        onClick={() => inc(p.id)}
+                                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => handleAdd(p)}
+                                    className={`w-full rounded py-2 font-semibold text-white transition ${
+                                        added[p.id]
+                                            ? 'bg-green-500 btn-pulse'
+                                            : 'bg-primary-500 hover:bg-primary-600'
+                                    }`}
+                                >
+                                    {added[p.id] ? 'Added!' : 'Add to Cart'}
+                                </button>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
-
-            {/* login prompt */}
-            {showPrompt && <LoginPrompt onClose={() => setShowPrompt(false)} />}
         </div>
     );
 }

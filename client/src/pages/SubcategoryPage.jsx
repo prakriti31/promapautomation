@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/api';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { IndianRupee as Rupee } from 'lucide-react';
-import LoginPrompt from '../components/LoginPrompt';
 
 export default function SubcategoryPage() {
     const { category, subcat } = useParams();
     const [items, setItems] = useState([]);
-    const [showPrompt, setShowPrompt] = useState(false);
-
+    const [added, setAdded] = useState({});
     const { cart, add, inc, dec } = useCart();
-    const { user } = useAuth();
 
     useEffect(() => {
         api.get('/products').then(r =>
@@ -20,63 +16,75 @@ export default function SubcategoryPage() {
                 r.data.filter(
                     p =>
                         p.category === category &&
-                        (subcat === 'All' || p.subcategory === subcat),
-                ),
-            ),
+                        (subcat === 'All' || p.subcategory === subcat)
+                )
+            )
         );
     }, [category, subcat]);
 
-    const handleAdd = p => {
-        if (!user) setShowPrompt(true);
-        else add(p);
+    const handleAdd = (p) => {
+        add(p);
+        setAdded((id) => ({ ...id, [p.id]: true }));
+        setTimeout(() => setAdded((id) => ({ ...id, [p.id]: false })), 800);
     };
 
     return (
-        <div className="mx-auto max-w-6xl px-4">
-            <h2 className="py-4 text-xl font-semibold">
+        <div className="max-w-6xl mx-auto px-4 py-6">
+            <h2 className="text-2xl font-semibold mb-4">
                 {category} &gt; {subcat}
             </h2>
-
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                {items.map(p => {
-                    const item = cart[p.id];
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {items.map((p) => {
+                    const inCart = cart[p.id];
+                    const priceNum = Number(p.price) || 0;
                     return (
-                        <div key={p.id} className="rounded-xl border p-3 shadow-sm">
+                        <div
+                            key={p.id}
+                            className="fade-in-up bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition"
+                        >
                             <img
                                 src={p.photo_url}
                                 alt={p.name}
-                                className="h-40 w-full rounded object-cover"
+                                className="h-40 w-full object-cover rounded mb-2"
                             />
-                            <h3 className="mt-2 font-bold">{p.name}</h3>
-                            <p className="flex items-center gap-1 text-primary-800">
-                                <Rupee className="h-4 w-4" />
-                                {p.price}
+                            <h3 className="font-bold text-lg">{p.name}</h3>
+                            <p className="flex items-center mt-1 mb-3 text-gray-700">
+                                <Rupee className="inline w-4 h-4 mr-1" />
+                                {priceNum.toFixed(2)}
                             </p>
 
-                            {item ? (
-                                <div className="mt-2 flex items-center gap-2">
-                                    <button onClick={() => dec(p.id)} className="rounded border px-2">
+                            {inCart ? (
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => dec(p.id)}
+                                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                                    >
                                         –
                                     </button>
-                                    <span>{item.qty}</span>
-                                    <button onClick={() => inc(p.id)} className="rounded border px-2">
+                                    <span>{inCart.qty}</span>
+                                    <button
+                                        onClick={() => inc(p.id)}
+                                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                                    >
                                         +
                                     </button>
                                 </div>
                             ) : (
                                 <button
                                     onClick={() => handleAdd(p)}
-                                    className="mt-2 w-full rounded bg-primary-500 px-3 py-1 text-white"
+                                    className={`w-full rounded py-2 text-white font-semibold transition ${
+                                        added[p.id]
+                                            ? 'bg-green-500 btn-pulse'
+                                            : 'bg-primary-500 hover:bg-primary-600'
+                                    }`}
                                 >
-                                    Add to Cart
+                                    {added[p.id] ? 'Added!' : 'Add to Cart'}
                                 </button>
                             )}
                         </div>
                     );
                 })}
             </div>
-
-            {showPrompt && <LoginPrompt onClose={() => setShowPrompt(false)} />}
         </div>
     );
 }

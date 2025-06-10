@@ -9,6 +9,7 @@ export default function CartPage() {
     const { cart, inc, dec, clear, total, countTypes } = useCart();
     const { user } = useAuth();
     const [placing, setPlacing] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const items = Object.values(cart);
 
     const placeOrder = async () => {
@@ -25,16 +26,36 @@ export default function CartPage() {
             })),
         });
         clear();
-        alert('Your request has been received, you will be contacted soon.');
         setPlacing(false);
+        setShowSuccess(true);
     };
 
-    if (countTypes === 0)
+    if (countTypes === 0 && !showSuccess)
         return <p className="p-8 text-center">Cart is empty.</p>;
 
     return (
-        <div className="mx-auto max-w-4xl space-y-4 p-4">
-            {/* NEW: quick navigation back home */}
+        <div className="relative mx-auto max-w-4xl space-y-4 p-4">
+            {/* Success Modal */}
+            {showSuccess && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                    <div className="animate-pop rounded-lg bg-white p-6 text-center shadow-lg max-w-sm w-full">
+                        <h2 className="text-xl font-semibold mb-2 text-green-700">
+                            🎉 Order Placed!
+                        </h2>
+                        <p className="mb-4">
+                            Your request has been received. You will be contacted soon.
+                        </p>
+                        <button
+                            onClick={() => setShowSuccess(false)}
+                            className="rounded bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 transition"
+                        >
+                            Okay
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Navigation */}
             <div>
                 <Link
                     to="/"
@@ -58,11 +79,17 @@ export default function CartPage() {
                             {product.price}
                         </p>
                         <div className="mt-1 flex items-center gap-2">
-                            <button onClick={() => dec(product.id)} className="rounded border px-2">
+                            <button
+                                onClick={() => dec(product.id)}
+                                className="rounded border px-2"
+                            >
                                 –
                             </button>
                             <span>{qty}</span>
-                            <button onClick={() => inc(product.id)} className="rounded border px-2">
+                            <button
+                                onClick={() => inc(product.id)}
+                                className="rounded border px-2"
+                            >
                                 +
                             </button>
                         </div>
@@ -79,7 +106,7 @@ export default function CartPage() {
             <button
                 disabled={placing}
                 onClick={placeOrder}
-                className="float-right rounded bg-primary-600 px-6 py-2 text-white"
+                className="float-right rounded bg-primary-600 px-6 py-2 text-white disabled:opacity-50"
             >
                 {placing ? 'Placing…' : 'Place Order'}
             </button>

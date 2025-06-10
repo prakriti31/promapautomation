@@ -28,8 +28,6 @@ CREATE TABLE products (
                           description   TEXT         NULL,
                           price         DECIMAL(10,2) UNSIGNED NOT NULL,
                           photo_url     VARCHAR(255) NULL,
-                          photo_url2    VARCHAR(255) NULL,                      -- new
-                          photo_url3    VARCHAR(255) NULL,                      -- new
                           created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
                           updated_at    TIMESTAMP    NULL ON UPDATE CURRENT_TIMESTAMP,
 

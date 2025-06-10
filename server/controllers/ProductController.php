@@ -14,23 +14,36 @@ class ProductController {
         $subcategory = $_POST['subcategory'] ?? '';
         $description = $_POST['description'] ?? '';
         $price       = $_POST['price']       ?? '';
-        if (!$name || !$category || !$subcategory || !$price) {
-            jsonResponse(['error'=>'Missing required fields'],422); return;
+
+        // Validation:
+        if (!$name || !$category || !$price) {
+            jsonResponse(['error' => 'Missing required fields'], 422);
+            return;
         }
-        $photos = [];
-        $dir = __DIR__.'/../../uploads';
-        if(!is_dir($dir)) mkdir($dir,0755,true);
-        foreach(['photo1','photo2','photo3'] as $key){
-            if(!empty($_FILES[$key]['tmp_name'])){
-                $file = uniqid().'-'.basename($_FILES[$key]['name']);
-                move_uploaded_file($_FILES[$key]['tmp_name'],"$dir/$file");
-                $photos[]="/uploads/$file";
-            } else $photos[] = null;
+
+        // Allow subcategory empty for Sensors and Cables
+        if (!in_array($category, ['Sensors', 'Cables']) && !$subcategory) {
+            jsonResponse(['error' => 'Subcategory is required for this category'], 422);
+            return;
         }
-        db()->prepare("INSERT INTO products(category,subcategory,name,description,price,photo_url,photo_url2,photo_url3) VALUES(?,?,?,?,?,?,?,?)")
-            ->execute([$category,$subcategory,$name,$description,$price,$photos[0],$photos[1],$photos[2]]);
-        jsonResponse(['success'=>true,'id'=>db()->lastInsertId()]);
+
+        $dir = __DIR__ . '/../../uploads';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $photoUrl = null;
+        if (!empty($_FILES['photo1']['tmp_name'])) {
+            $file = uniqid() . '-' . basename($_FILES['photo1']['name']);
+            move_uploaded_file($_FILES['photo1']['tmp_name'], "$dir/$file");
+            $photoUrl = "/uploads/$file";
+        }
+
+        // Insert into DB — note only one photo_url column now
+        db()->prepare("INSERT INTO products(category, subcategory, name, description, price, photo_url) VALUES (?, ?, ?, ?, ?, ?)")
+            ->execute([$category, $subcategory, $name, $description, $price, $photoUrl]);
+
+        jsonResponse(['success' => true, 'id' => db()->lastInsertId()]);
     }
+
 
     public static function update($id){
         $data=json_decode(file_get_contents('php://input'),true)??[];

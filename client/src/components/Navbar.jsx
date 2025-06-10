@@ -15,14 +15,13 @@ export default function Navbar() {
         navigate('/');
     };
 
-    /* cart link with badge (only for non-admins) */
     const CartLink = (
         <Link to="/cart" className="relative">
             <ShoppingCart className="h-6 w-6" />
             {countTypes > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white">
-          {countTypes}
-        </span>
+                    {countTypes}
+                </span>
             )}
         </Link>
     );
@@ -31,12 +30,16 @@ export default function Navbar() {
         <nav className="bg-primary-200 shadow-md">
             <div className="mx-auto max-w-6xl px-4">
                 <div className="flex h-16 items-center justify-between">
-                    {/* logo */}
-                    <Link
-                        to="/"
-                        className="text-xl font-extrabold tracking-wide text-primary-800"
-                    >
-                        PROMAP Automation
+                    {/* logo + title */}
+                    <Link to="/" className="flex items-center gap-3">
+                        <img
+                            src="/photos/Promap.png"
+                            alt="Promap Logo"
+                            className="h-16 w-auto sm:h-20 md:h-24"
+                        />
+                        <span className="text-xl font-extrabold tracking-wide text-primary-800">
+                            PROMAP Automation
+                        </span>
                     </Link>
 
                     {/* desktop links */}
@@ -55,7 +58,6 @@ export default function Navbar() {
                         {user && user.role === 'ADMIN' && (
                             <>
                                 <span className="font-bold text-primary-800">ADMIN</span>
-                                {/* ✗ cart link intentionally omitted for admins */}
                                 <button
                                     onClick={handleLogout}
                                     className="hover:text-primary-600"
@@ -67,9 +69,9 @@ export default function Navbar() {
 
                         {user && user.role !== 'ADMIN' && (
                             <>
-                <span className="text-primary-800">
-                  {user.name || user.email}
-                </span>
+                                <span className="text-primary-800">
+                                    {user.name || user.email}
+                                </span>
                                 <Link to="/products" className="hover:text-primary-600">
                                     Products
                                 </Link>
@@ -132,7 +134,6 @@ export default function Navbar() {
                                 <span className="block py-2">{user.name || user.email}</span>
                             )}
 
-                            {/* products + cart visible only for non-admins */}
                             {user.role !== 'ADMIN' && (
                                 <>
                                     <Link to="/products" className="block py-2">

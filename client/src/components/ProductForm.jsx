@@ -3,12 +3,12 @@ import api from '../api/api';
 
 /* ————————— category → sub-category map ————————— */
 const options = {
-    PLC:        ['Siemens PLC', 'ABB PLC', 'Schneider PLC', 'Allen Bradley PLC'],
-    Drives:     ['Siemens', 'ABB'],
-    Motors:     ['Nord', 'Siemens'],
+    PLC:          ['Siemens PLC', 'ABB PLC', 'Schneider PLC', 'Allen Bradley PLC'],
+    Drives:       ['Siemens', 'ABB'],
+    Motors:       ['Nord', 'Siemens'],
     'Power Items': ['MCCB', 'MCB'],
-    Cables:     [],
-    Sensors:    [],               // NEW category
+    Cables:       [],
+    Sensors:      [],
 };
 const categories = Object.keys(options);
 
@@ -21,57 +21,73 @@ export default function ProductForm({ onSuccess, product = null }) {
         subcategory: product?.subcategory ?? '',
         description: product?.description ?? '',
         price:       product?.price       ?? '',
-        photos:      [null, null, null],
+        photo:       null,
     });
 
-    const change      = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-    const changePhoto = (i, file) => {
-        const p = [...form.photos];
-        p[i] = file;
-        setForm(f => ({ ...f, photos: p }));
+    const change = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+    const changePhoto = (e) => {
+        setForm(f => ({ ...f, photo: e.target.files[0] ?? null }));
     };
 
     const submit = async e => {
         e.preventDefault();
+
         try {
+            const hasSubcategories = options[form.category]?.length > 0;
+            const subcategoryRequired = hasSubcategories && form.category !== 'Sensors' && form.category !== 'Cables';
+
+            if (subcategoryRequired && !form.subcategory) {
+                alert('Please select a subcategory.');
+                return;
+            }
+
             if (isEdit) {
                 await api.put(`/products/${product.id}`, {
                     name:        form.name,
                     category:    form.category,
-                    subcategory: form.subcategory,
+                    subcategory: subcategoryRequired ? form.subcategory : null,
                     description: form.description,
                     price:       form.price,
                 });
             } else {
                 const data = new FormData();
-                ['name', 'category', 'subcategory', 'description', 'price'].forEach(k =>
-                    data.append(k, form[k]),
-                );
-                form.photos.forEach(
-                    (file, i) => file && data.append(`photo${i + 1}`, file),
-                );
+                data.append('name', form.name);
+                data.append('category', form.category);
+                if (subcategoryRequired) {
+                    data.append('subcategory', form.subcategory);
+                }
+                data.append('description', form.description);
+                data.append('price', form.price);
+                if (form.photo) {
+                    data.append('photo1', form.photo);
+                }
                 await api.post('/products', data);
             }
+
             onSuccess();
-            if (!isEdit)
+
+            if (!isEdit) {
                 setForm({
                     name: '',
                     category: '',
                     subcategory: '',
                     description: '',
                     price: '',
-                    photos: [null, null, null],
+                    photo: null,
                 });
+            }
         } catch (err) {
             alert(err.response?.data?.error || 'Error');
         }
     };
 
+    const hasSubcategories = options[form.category]?.length > 0;
+    const subcategoryRequired = hasSubcategories && form.category !== 'Sensors' && form.category !== 'Cables';
+
     return (
         <form onSubmit={submit} className="space-y-4 rounded border p-4">
-            <h2 className="text-xl font-bold">
-                {isEdit ? 'Edit Product' : 'Add Product'}
-            </h2>
+            <h2 className="text-xl font-bold">{isEdit ? 'Edit Product' : 'Add Product'}</h2>
 
             <input
                 name="name"
@@ -96,24 +112,30 @@ export default function ProductForm({ onSuccess, product = null }) {
                     Select category
                 </option>
                 {categories.map(c => (
-                    <option key={c}>{c}</option>
+                    <option key={c} value={c}>
+                        {c}
+                    </option>
                 ))}
             </select>
 
-            <select
-                name="subcategory"
-                value={form.subcategory}
-                onChange={change}
-                required
-                className="w-full rounded border p-2"
-            >
-                <option value="" disabled>
-                    Select subcategory
-                </option>
-                {(options[form.category] || []).map(s => (
-                    <option key={s}>{s}</option>
-                ))}
-            </select>
+            {hasSubcategories && (
+                <select
+                    name="subcategory"
+                    value={form.subcategory}
+                    onChange={change}
+                    className="w-full rounded border p-2"
+                    required={subcategoryRequired}
+                >
+                    <option value="" disabled>
+                        Select subcategory
+                    </option>
+                    {options[form.category].map(s => (
+                        <option key={s} value={s}>
+                            {s}
+                        </option>
+                    ))}
+                </select>
+            )}
 
             <textarea
                 name="description"
@@ -135,16 +157,14 @@ export default function ProductForm({ onSuccess, product = null }) {
                 className="w-full rounded border p-2"
             />
 
-            {!isEdit &&
-                [0, 1, 2].map(i => (
-                    <input
-                        key={i}
-                        type="file"
-                        accept="image/*"
-                        onChange={e => changePhoto(i, e.target.files[0])}
-                        className="w-full"
-                    />
-                ))}
+            {!isEdit && (
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={changePhoto}
+                    className="w-full"
+                />
+            )}
 
             <button
                 type="submit"
