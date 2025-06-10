@@ -50,21 +50,44 @@ export default function Home() {
             <CategoryNavbar />
             <HeroCarousel />
 
-            {/* catchy intro before brand list */}
-            <h2 className="scroll-fade mx-auto mt-16 max-w-6xl px-6 text-center text-4xl font-extrabold">
-                Trusted Global Brands&nbsp;&nbsp;•&nbsp;&nbsp;Local Engineering Expertise
-            </h2>
+            {/* New heading below the carousel */}
+            <h3 className="mt-8 mb-4 text-center text-2xl font-semibold text-primary-700">
+                We deal with
+            </h3>
 
-            {/* brand sections */}
-            {brands.map((b, idx) => (
-                <BrandSection
-                    key={b.name}
-                    brand={b.name}
-                    logo={b.logo}
-                    details={b.text}
-                    flip={idx % 2 === 1}
-                />
-            ))}
+            {/* Small animated brand logos visible on mobile */}
+            <div className="mx-auto mb-12 flex max-w-full gap-6 overflow-x-auto px-6 sm:hidden scroll-smooth snap-x snap-mandatory">
+                {brands.map((b) => (
+                    <div
+                        key={b.name}
+                        className="snap-start flex-shrink-0 w-24 cursor-pointer transition-transform hover:scale-110"
+                        aria-label={b.name}
+                    >
+                        <img
+                            src={b.logo}
+                            alt={b.name + ' logo'}
+                            className="h-24 w-auto object-contain"
+                        />
+                    </div>
+                ))}
+            </div>
+
+            {/* Larger brand sections hidden on small screens */}
+            <div className="hidden sm:block">
+                <h2 className="scroll-fade mx-auto mt-16 max-w-6xl px-6 text-center text-4xl font-extrabold">
+                    Trusted Global Brands&nbsp;&nbsp;•&nbsp;&nbsp;Local Engineering Expertise
+                </h2>
+
+                {brands.map((b, idx) => (
+                    <BrandSection
+                        key={b.name}
+                        brand={b.name}
+                        logo={b.logo}
+                        details={b.text}
+                        flip={idx % 2 === 1}
+                    />
+                ))}
+            </div>
 
             {/* two informational blurbs */}
             <InfoBlurb
