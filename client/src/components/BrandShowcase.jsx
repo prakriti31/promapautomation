@@ -51,9 +51,7 @@ export default function BrandShowcase() {
 
     return (
         <section ref={sectionRef} className="scroll-fade bg-primary-50 py-16">
-            <h3 className="mb-12 text-center text-3xl font-bold">
-                Authorised Brands
-            </h3>
+            <h3 className="mb-12 text-center text-3xl font-bold">Authorised Brands</h3>
 
             <div className="space-y-12">
                 {brands.map(({ key, products }, idx) => (
@@ -65,6 +63,7 @@ export default function BrandShowcase() {
                         <img
                             src={`/photos/${key}_logo.png`}
                             alt={`${key} logo`}
+                            loading="lazy"
                             className="h-24 w-auto object-contain"
                         />
 
@@ -75,7 +74,8 @@ export default function BrandShowcase() {
                                     key={i}
                                     src={`/photos/${key}_${i + 1}.jpg`}
                                     alt=""
-                                    style={{ animationDelay: `${i * 4}s` }} /* 20 s total loop */
+                                    loading="lazy"
+                                    style={{ animationDelay: `${i * 4}s` }}
                                     className="absolute inset-0 h-full w-full animate-slideshow object-cover opacity-0"
                                 />
                             ))}

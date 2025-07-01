@@ -32,6 +32,7 @@ export default function ProductCatalog() {
                             <img
                                 src={p.photo_url}
                                 alt={p.name}
+                                loading="lazy"
                                 className="h-48 w-full object-cover rounded-lg mb-3"
                             />
                             <h3 className="font-bold text-lg mb-1">{p.name}</h3>

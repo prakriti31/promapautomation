@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import CategoryNavbar from '../components/CategoryNavbar';
-import HeroCarousel   from '../components/HeroCarousel';
-import BrandSection   from '../components/BrandSection';
-import InfoBlurb      from '../components/InfoBlurb';
-import SiteFooter     from '../components/SiteFooter';
+import InfoBlurb from '../components/InfoBlurb';
+import SiteFooter from '../components/SiteFooter';
+
+// Lazy-loaded components
+const HeroCarousel = lazy(() => import('../components/HeroCarousel'));
+const BrandSection = lazy(() => import('../components/BrandSection'));
 
 /* ——— brand data ——— */
 const brands = [
@@ -48,7 +50,10 @@ export default function Home() {
     return (
         <div className="min-h-screen overflow-x-hidden bg-primary-50 text-primary-900">
             <CategoryNavbar />
-            <HeroCarousel />
+
+            <Suspense fallback={<div className="text-center py-8">Loading carousel...</div>}>
+                <HeroCarousel />
+            </Suspense>
 
             {/* New heading below the carousel */}
             <h3 className="mt-8 mb-4 text-center text-2xl font-semibold text-primary-700">
@@ -65,7 +70,8 @@ export default function Home() {
                     >
                         <img
                             src={b.logo}
-                            alt={b.name + ' logo'}
+                            alt={`${b.name} logo`}
+                            loading="lazy"
                             className="h-24 w-auto object-contain"
                         />
                     </div>
@@ -78,15 +84,17 @@ export default function Home() {
                     Trusted Global Brands&nbsp;&nbsp;•&nbsp;&nbsp;Local Engineering Expertise
                 </h2>
 
-                {brands.map((b, idx) => (
-                    <BrandSection
-                        key={b.name}
-                        brand={b.name}
-                        logo={b.logo}
-                        details={b.text}
-                        flip={idx % 2 === 1}
-                    />
-                ))}
+                <Suspense fallback={<div className="text-center py-8">Loading brands...</div>}>
+                    {brands.map((b, idx) => (
+                        <BrandSection
+                            key={b.name}
+                            brand={b.name}
+                            logo={b.logo}
+                            details={b.text}
+                            flip={idx % 2 === 1}
+                        />
+                    ))}
+                </Suspense>
             </div>
 
             {/* two informational blurbs */}

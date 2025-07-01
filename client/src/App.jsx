@@ -1,45 +1,46 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
-import Home from './pages/Home';
-import ProductCatalog from './pages/ProductCatalog';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import SubcategoryPage from "./pages/SubcategoryPage";
-import CartPage from "./pages/CartPage";
-import TermsOfUse from './pages/TermsOfUse';
+
+// Lazy-loaded pages
+const Home = lazy(() => import('./pages/Home'));
+const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const SubcategoryPage = lazy(() => import('./pages/SubcategoryPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 
 export default function App() {
     return (
         <AuthProvider>
             <Navbar />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<ProductCatalog />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route
-                    path="/admin"
-                    element={
-                        <ProtectedRoute adminOnly>
-                            <AdminDashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="*"
-                    element={<div className="p-10 text-center text-2xl">404</div>}
-                />
-
-                {/* existing routes */}
-                <Route path="/products/:category/:subcat" element={<SubcategoryPage/>}/>
-                <Route path="/cart" element={<CartPage/>}/>
-                <Route path="/terms" element={<TermsOfUse />} />
-
-            </Routes>
+            <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<ProductCatalog />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route
+                        path="/admin"
+                        element={
+                            <ProtectedRoute adminOnly>
+                                <AdminDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/products/:category/:subcat" element={<SubcategoryPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/terms" element={<TermsOfUse />} />
+                    <Route
+                        path="*"
+                        element={<div className="p-10 text-center text-2xl">404</div>}
+                    />
+                </Routes>
+            </Suspense>
         </AuthProvider>
     );
 }

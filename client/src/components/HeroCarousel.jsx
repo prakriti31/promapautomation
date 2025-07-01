@@ -11,6 +11,7 @@ export default function HeroCarousel() {
                 <img
                     key={src}
                     src={src}
+                    loading="lazy"
                     alt=""
                     style={{ animationDelay: `${i * durationPer}ms` }}
                     className="absolute inset-0 h-full w-full object-cover opacity-0 animate-slideshow"
