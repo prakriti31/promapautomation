@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import CategoryNavbar from '../components/CategoryNavbar';
 import InfoBlurb from '../components/InfoBlurb';
 import SiteFooter from '../components/SiteFooter';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 const HeroCarousel = lazy(() => import('../components/HeroCarousel'));
 const BrandSection = lazy(() => import('../components/BrandSection'));
@@ -46,7 +47,9 @@ const brands = [
 
 export default function Home() {
     return (
-        <div className="min-h-screen overflow-x-hidden bg-primary-50 text-primary-900">
+        <div className="relative min-h-screen overflow-x-hidden text-primary-900">
+            <AnimatedBackground />
+
             <CategoryNavbar />
 
             {/* Brand stripe above carousel */}
