@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Lazy-loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -41,6 +43,9 @@ export default function App() {
                     />
                 </Routes>
             </Suspense>
+
+            {/* Toast container for global notifications */}
+            <ToastContainer position="top-right" autoClose={2000} />
         </AuthProvider>
     );
 }

@@ -3,6 +3,9 @@ import api from '../api/api';
 import { useCart } from '../context/CartContext';
 import { IndianRupee as Rupee } from 'lucide-react';
 
+import confetti from 'canvas-confetti';
+import { toast } from 'react-toastify';
+
 function ProductCard({ p, inCart, added, handleAdd, inc, dec }) {
     const priceNum = Number(p.price) || 0;
 
@@ -21,17 +24,19 @@ function ProductCard({ p, inCart, added, handleAdd, inc, dec }) {
             </p>
 
             {inCart ? (
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between w-full h-10">
                     <button
                         onClick={() => dec(p.id)}
-                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                        className="w-1/3 h-full rounded-l bg-primary-200 hover:bg-primary-300 transition-all duration-200 text-primary-900 font-bold text-xl"
                     >
                         –
                     </button>
-                    <span className="font-medium">{inCart.qty}</span>
+                    <div className="w-1/3 h-full flex items-center justify-center bg-primary-100 text-primary-900 font-semibold text-lg">
+                        {inCart.qty}
+                    </div>
                     <button
                         onClick={() => inc(p.id)}
-                        className="bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+                        className="w-1/3 h-full rounded-r bg-primary-200 hover:bg-primary-300 transition-all duration-200 text-primary-900 font-bold text-xl"
                     >
                         +
                     </button>
@@ -39,15 +44,17 @@ function ProductCard({ p, inCart, added, handleAdd, inc, dec }) {
             ) : (
                 <button
                     onClick={() => handleAdd(p)}
-                    className={`w-full rounded py-2 font-semibold text-white transition ${
-                        added[p.id]
-                            ? 'bg-green-500 btn-pulse'
-                            : 'bg-primary-500 hover:bg-primary-600'
+                    className={`w-full h-10 rounded-lg py-2 font-semibold text-white transform transition-all duration-300 ease-in-out
+            ${added[p.id]
+                        ? 'bg-green-500 animate-scalePulse'
+                        : 'bg-primary-500 hover:bg-primary-600'
                     }`}
+                    style={{ minHeight: '2.5rem' }}
                 >
                     {added[p.id] ? 'Added!' : 'Add to Cart'}
                 </button>
             )}
+
         </div>
     );
 }
@@ -57,17 +64,37 @@ const MemoProductCard = memo(ProductCard);
 export default function ProductCatalog() {
     const [products, setProducts] = useState([]);
     const [added, setAdded] = useState({});
-    const { cart, add, inc, dec } = useCart();
+    const {cart, add, inc, dec} = useCart();
 
     useEffect(() => {
         api.get('/products').then(r => setProducts(r.data));
     }, []);
 
+    // const handleAdd = (p) => {
+    //     add(p);
+    //     setAdded((id) => ({ ...id, [p.id]: true }));
+    //     setTimeout(() => setAdded((id) => ({ ...id, [p.id]: false })), 800);
+    // };
+
     const handleAdd = (p) => {
-        add(p);
+        add(p);  // from cart context
         setAdded((id) => ({ ...id, [p.id]: true }));
-        setTimeout(() => setAdded((id) => ({ ...id, [p.id]: false })), 800);
+
+        // Show toast
+        toast.success(`${p.name} added to cart!`);
+
+        // Show confetti
+        confetti({
+            particleCount: 60,
+            spread: 70,
+            origin: { y: 0.6 },
+        });
+
+        setTimeout(() => {
+            setAdded((id) => ({ ...id, [p.id]: false }));
+        }, 800);
     };
+
 
     return (
         <div className="max-w-6xl mx-auto p-4">

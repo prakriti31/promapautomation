@@ -33,11 +33,23 @@ module.exports = {
                     '0%':   { transform: 'translateX(0%)' },
                     '100%': { transform: 'translateX(-50%)' },
                 },
+                scalePulse: {
+                    '0%': { transform: 'scale(1)', opacity: 1 },
+                    '50%': { transform: 'scale(1.05)', opacity: 0.9 },
+                    '100%': { transform: 'scale(1)', opacity: 1 },
+                },
+                cardPop: {
+                    '0%': { transform: 'scale(1)' },
+                    '50%': { transform: 'scale(1.03)', boxShadow: '0 0 0 4px rgba(0,0,0,0.1)' },
+                    '100%': { transform: 'scale(1)' },
+                },
             },
             animation: {
                 slideshow: 'slideshow 20s ease-in-out infinite',
                 fadeUp: 'fadeUp 0.8s ease forwards',
                 marquee: 'marquee 40s linear infinite',
+                scalePulse: 'scalePulse 0.4s ease-in-out',
+                cardPop: 'cardPop 0.4s ease-in-out',
             },
         },
     },
