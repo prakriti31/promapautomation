@@ -2,23 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 
-/* category → array of sub-categories (empty array means none) */
 const menu = {
     PLC: ['Siemens PLC', 'ABB PLC', 'Schneider PLC', 'Allen Bradley PLC'],
     Drives: ['Siemens', 'ABB'],
     Motors: ['Nord', 'Siemens'],
     'Power Items': ['MCCB', 'MCB'],
-    Cables: [],            // no sub-options
-    Sensors: [],           // new category
+    Cables: [],
+    Sensors: [],
 };
 
 export default function CategoryNavbar() {
-    const [desktopOpen, setDesktopOpen] = useState(null); // which cat is open (desktop)
-    const [mobileOpen, setMobileOpen]   = useState(false); // burger state (mobile)
-    const [mobileCat,  setMobileCat]    = useState(null);  // which cat expanded (mobile)
+    const [desktopOpen, setDesktopOpen] = useState(null);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [mobileCat, setMobileCat] = useState(null);
     const navRef = useRef();
 
-    /* close menus on outside click */
     useEffect(() => {
         function handleClick(e) {
             if (navRef.current && !navRef.current.contains(e.target)) {
@@ -32,21 +30,19 @@ export default function CategoryNavbar() {
     }, []);
 
     const categories = Object.keys(menu);
-    const linkPath   = (cat, sub = 'All') =>
+    const linkPath = (cat, sub = 'All') =>
         `/products/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}`;
 
     return (
-        <div ref={navRef} className="bg-primary-800 text-white">
+        <div ref={navRef} className="bg-primary-800 text-white shadow-sm">
             <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4">
-                {/* ─── Desktop menu ─────────────────────────────── */}
                 <div className="hidden items-center space-x-4 md:flex">
-                    {categories.map(cat => {
+                    {categories.map((cat) => {
                         const subs = menu[cat];
                         const hasSub = subs.length > 0;
 
                         return (
                             <div key={cat} className="relative">
-                                {/* main button (toggles dropdown if any) */}
                                 <button
                                     onClick={() =>
                                         hasSub
@@ -59,10 +55,8 @@ export default function CategoryNavbar() {
                                     {hasSub && <ChevronDown className="ml-1 h-4 w-4" />}
                                 </button>
 
-                                {/* dropdown list */}
                                 {hasSub && desktopOpen === cat && (
                                     <div className="absolute left-0 mt-1 rounded bg-white text-black shadow-lg z-30">
-                                        {/* “All” link first */}
                                         <Link
                                             to={linkPath(cat)}
                                             onClick={() => setDesktopOpen(null)}
@@ -70,7 +64,7 @@ export default function CategoryNavbar() {
                                         >
                                             All {cat}
                                         </Link>
-                                        {subs.map(sub => (
+                                        {subs.map((sub) => (
                                             <Link
                                                 key={sub}
                                                 to={linkPath(cat, sub)}
@@ -83,7 +77,6 @@ export default function CategoryNavbar() {
                                     </div>
                                 )}
 
-                                {/* no-sub cats navigate directly */}
                                 {!hasSub && (
                                     <Link
                                         to={linkPath(cat)}
@@ -96,7 +89,6 @@ export default function CategoryNavbar() {
                     })}
                 </div>
 
-                {/* ─── Mobile burger ────────────────────────────── */}
                 <button
                     className="flex items-center rounded px-3 py-2 hover:bg-primary-700 md:hidden"
                     onClick={() => setMobileOpen(!mobileOpen)}
@@ -106,10 +98,9 @@ export default function CategoryNavbar() {
                 </button>
             </div>
 
-            {/* ─── Mobile dropdown ───────────────────────────── */}
             {mobileOpen && (
                 <div className="space-y-2 bg-primary-700 px-4 pb-4 md:hidden">
-                    {categories.map(cat => {
+                    {categories.map((cat) => {
                         const subs = menu[cat];
                         const hasSub = subs.length > 0;
                         const expanded = mobileCat === cat;
@@ -127,7 +118,6 @@ export default function CategoryNavbar() {
                                     {hasSub && <ChevronDown className="h-4 w-4" />}
                                 </button>
 
-                                {/* “All” + sub-links */}
                                 {hasSub && expanded && (
                                     <div className="space-y-1 pt-1 pl-4">
                                         <Link
@@ -140,7 +130,7 @@ export default function CategoryNavbar() {
                                         >
                                             All {cat}
                                         </Link>
-                                        {subs.map(sub => (
+                                        {subs.map((sub) => (
                                             <Link
                                                 key={sub}
                                                 to={linkPath(cat, sub)}
@@ -156,7 +146,6 @@ export default function CategoryNavbar() {
                                     </div>
                                 )}
 
-                                {/* no-sub cat direct nav overlay */}
                                 {!hasSub && (
                                     <Link
                                         to={linkPath(cat)}

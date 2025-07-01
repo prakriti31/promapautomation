@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import useReveal         from '../hooks/useReveal';
+import useReveal from '../hooks/useReveal';
 
 export default function InfoBlurb({ title, text, flip = false }) {
     const ref = useRef(null);
@@ -12,10 +12,10 @@ export default function InfoBlurb({ title, text, flip = false }) {
                     flip ? 'md:flex-row-reverse' : ''
                 }`}
             >
-                <h3 className="w-full text-center text-3xl font-bold md:w-1/3 md:text-left">
+                <h3 className="w-full text-center text-3xl font-bold text-primary-800 md:w-1/3 md:text-left">
                     {title}
                 </h3>
-                <p className="w-full text-gray-700 md:w-2/3 md:text-lg leading-relaxed">
+                <p className="w-full text-primary-900 md:w-2/3 md:text-lg leading-relaxed">
                     {text}
                 </p>
             </div>

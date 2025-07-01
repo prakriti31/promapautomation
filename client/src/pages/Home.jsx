@@ -51,17 +51,44 @@ export default function Home() {
         <div className="min-h-screen overflow-x-hidden bg-primary-50 text-primary-900">
             <CategoryNavbar />
 
+            {/* Animated brand stripe below carousel */}
+            <div className="overflow-hidden py-6">
+                <div className="animate-marquee flex w-max gap-16 px-6">
+                    {brands.concat(brands).map((b, i) => (
+                        <img
+                            key={`${b.name}-${i}`}
+                            src={b.logo}
+                            alt={b.name}
+                            className="h-12 w-auto object-contain opacity-90 hover:scale-110 transition-transform"
+                        />
+                    ))}
+                </div>
+            </div>
+
             <Suspense fallback={<div className="text-center py-8">Loading carousel...</div>}>
                 <HeroCarousel />
             </Suspense>
 
-            {/* New heading below the carousel */}
-            <h3 className="mt-8 mb-4 text-center text-2xl font-semibold text-primary-700">
+            {/* Animated brand stripe below carousel */}
+            <div className="overflow-hidden py-6">
+                <div className="animate-marquee flex w-max gap-16 px-6">
+                    {brands.concat(brands).map((b, i) => (
+                        <img
+                            key={`${b.name}-${i}`}
+                            src={b.logo}
+                            alt={b.name}
+                            className="h-12 w-auto object-contain opacity-90 hover:scale-110 transition-transform"
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <h3 className="mt-6 mb-4 text-center text-2xl font-semibold text-primary-700">
                 We deal with
             </h3>
 
-            {/* Small animated brand logos visible on mobile */}
-            <div className="mx-auto mb-12 flex max-w-full gap-6 overflow-x-auto px-6 sm:hidden scroll-smooth snap-x snap-mandatory">
+            {/* Small animated brand logos for mobile */}
+            <div className="mx-auto mb-10 flex max-w-full gap-6 overflow-x-auto px-6 sm:hidden scroll-smooth snap-x snap-mandatory">
                 {brands.map((b) => (
                     <div
                         key={b.name}
@@ -97,20 +124,19 @@ export default function Home() {
                 </Suspense>
             </div>
 
-            {/* two informational blurbs */}
             <InfoBlurb
                 title="Explore Our Complete Product Range"
                 text={`From compact PLCs to 100 kNm geared-motor assemblies, PROMAP Automation
-               carries more than 2 000 catalogue items on the shelf. Our application
-               engineers help you choose, configure and commission the right gear
-               without the usual delays.`}
+                   carries more than 2 000 catalogue items on the shelf. Our application
+                   engineers help you choose, configure and commission the right gear
+                   without the usual delays.`}
             />
 
             <InfoBlurb
                 title="Quality & Reliability You Can Measure"
                 text={`Every component that leaves our warehouse is test-logged, batch-tracked
-               and backed by a minimum 18-month warranty. We partner directly with OEMs
-               and tier-one factories—so you buy genuine parts, every single time.`}
+                   and backed by a minimum 18-month warranty. We partner directly with OEMs
+                   and tier-one factories—so you buy genuine parts, every single time.`}
                 flip
             />
 

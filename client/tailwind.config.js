@@ -5,23 +5,23 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    50:  '#fdf6f0',  // very light peach
-                    100: '#fae8d9',  // peach cream
-                    200: '#f6d3c2',  // light coral pastel
-                    300: '#f1bfb0',  // muted peach pink
-                    400: '#eca8aa',  // soft blush pink
-                    500: '#d88e96',  // pastel rose
-                    600: '#b76f7b',  // dusty rose
-                    700: '#995d6d',  // muted mauve
-                    800: '#7c495c',  // plum base
-                    900: '#623547',  // deep burgundy rose
+                    50:  '#fefbf5',  // pastel cream
+                    100: '#fff4db',  // light buttery yellow
+                    200: '#ffe9b9',  // soft lemon yellow
+                    300: '#ffdda1',  // mellow sunflower
+                    400: '#ffc682',  // golden peach
+                    500: '#fba479',  // warm apricot (blend of red & yellow)
+                    600: '#f2796e',  // pastel coral red
+                    700: '#dd5e69',  // rosewood
+                    800: '#b94653',  // dusty reddish mauve
+                    900: '#913845',  // burgundy
                 },
             },
             keyframes: {
                 slideshow: {
                     '0%':   { transform: 'scale(1.1)', opacity: 0 },
                     '8%':   { opacity: 1 },
-                    '25%':  { transform: 'scale(1)',  opacity: 1 },
+                    '25%':  { transform: 'scale(1)', opacity: 1 },
                     '33%':  { opacity: 0 },
                     '100%': { opacity: 0 },
                 },
@@ -29,10 +29,15 @@ module.exports = {
                     '0%':   { opacity: 0, transform: 'translateY(30px)' },
                     '100%': { opacity: 1, transform: 'translateY(0)' },
                 },
+                marquee: {
+                    '0%':   { transform: 'translateX(0%)' },
+                    '100%': { transform: 'translateX(-50%)' },
+                },
             },
             animation: {
                 slideshow: 'slideshow 20s ease-in-out infinite',
                 fadeUp: 'fadeUp 0.8s ease forwards',
+                marquee: 'marquee 40s linear infinite',
             },
         },
     },

@@ -1,7 +1,8 @@
+@import './styles/scrollFade.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import './styles/scrollFade.css';
 
 
 /* Custom pastel tweaks */
