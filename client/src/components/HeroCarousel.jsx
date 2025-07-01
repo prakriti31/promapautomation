@@ -5,7 +5,7 @@ const durationPer = 20_000 / pics.length;
 
 export default function HeroCarousel() {
     return (
-        <div className="relative h-[65vh] w-full overflow-hidden bg-black rounded-b-3xl shadow-lg">
+        <div className="relative h-[65vh] w-full overflow-hidden bg-black shadow-lg">
             {pics.map((src, i) => (
                 <img
                     key={src}
