@@ -1,27 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-/* Simple toast-style overlay */
-export default function LoginPrompt({ onClose }) {
+export default function LoginPrompt() {
+    const navigate = useNavigate();
+
     return (
-        <div className="fixed bottom-4 right-4 z-50 max-w-xs rounded-md border bg-white shadow-lg p-4">
-            <p className="mb-3 font-medium">
-                Hey! You are not logged in. Please&nbsp;Login.
-            </p>
-
-            <div className="flex justify-end gap-2">
-                <button
-                    onClick={onClose}
-                    className="rounded border px-3 py-1 text-sm hover:bg-gray-50"
-                >
-                    Close
-                </button>
-                <Link
-                    to="/login"
-                    className="rounded bg-primary-600 px-3 py-1 text-sm text-white hover:bg-primary-700"
-                >
-                    Login
-                </Link>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full text-center animate-fadeUp">
+                <h2 className="text-xl font-bold mb-3 text-primary-800">Login Required</h2>
+                <p className="text-gray-600 mb-4">Please login or sign up to add items to your cart.</p>
+                <div className="flex justify-center gap-4">
+                    <button
+                        className="px-4 py-2 rounded bg-primary-500 text-white hover:bg-primary-600 transition"
+                        onClick={() => navigate('/login')}
+                    >
+                        Login
+                    </button>
+                    <button
+                        className="px-4 py-2 rounded border border-primary-500 text-primary-700 hover:bg-primary-100 transition"
+                        onClick={() => navigate('/signup')}
+                    >
+                        Sign Up
+                    </button>
+                </div>
             </div>
         </div>
     );
