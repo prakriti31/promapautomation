@@ -15,6 +15,7 @@ export default defineConfig({
         emptyOutDir: true,
     },
     server: {
+        hmr: false, // make sure hot module reload is disabled in prod
         proxy: {
             '/api': {
                 target: 'http://localhost:8000',

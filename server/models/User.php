@@ -12,9 +12,15 @@ class User
     {
         $q = db()->prepare(
             "INSERT INTO users (name,email,phone,password_hash,role,verified)
-             VALUES(?,?,?,?,?,1)"   // verified already done at this point
+             VALUES(?,?,?,?,?,1)"
         );
-        $q->execute([$name, $email, $phone, password_hash($password, PASSWORD_BCRYPT), $role]);
+        $q->execute([
+            $name,
+            $email,
+            $phone,
+            password_hash($password, PASSWORD_BCRYPT),
+            $role
+        ]);
         return db()->lastInsertId();
     }
 
@@ -29,21 +35,24 @@ class User
 
     public static function token($user)
     {
+        $jwtSecret = $_ENV['JWT_SECRET'] ?? 'SuperSecretKey123!'; // fallback for safety
+
         $payload = [
             'sub'   => $user->id,
             'email' => $user->email,
             'role'  => $user->role,
             'iat'   => time(),
-            'exp'   => time() + 60 * 60 * 24,
+            'exp'   => time() + 60 * 60 * 24, // 24 hours
         ];
-        return JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
+
+        return JWT::encode($payload, $jwtSecret, 'HS256');
     }
 
     /* ---------- otp helpers ---------- */
 
     public static function storeOtp(string $email, string $code, int $ttl = 300): void
     {
-        db()->prepare("DELETE FROM email_otps WHERE email = ?")->execute([$email]); // one active
+        db()->prepare("DELETE FROM email_otps WHERE email = ?")->execute([$email]);
         db()->prepare(
             "INSERT INTO email_otps (email, code_hash, expires_at)
              VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND))"
