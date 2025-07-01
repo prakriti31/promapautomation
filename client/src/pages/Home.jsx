@@ -3,44 +3,42 @@ import CategoryNavbar from '../components/CategoryNavbar';
 import InfoBlurb from '../components/InfoBlurb';
 import SiteFooter from '../components/SiteFooter';
 
-// Lazy-loaded components
 const HeroCarousel = lazy(() => import('../components/HeroCarousel'));
 const BrandSection = lazy(() => import('../components/BrandSection'));
 
-/* ——— brand data ——— */
 const brands = [
     {
-        name:  'ABB',
-        logo:  '/photos/ABB_logo.png',
-        text:  `Certified ABB partner for PLCs, LV drives and safety relays.
+        name: 'ABB',
+        logo: '/photos/ABB_logo.png',
+        text: `Certified ABB partner for PLCs, LV drives and safety relays.
             Stock of ACS-880 drives up to 110 kW.
             Field service and programming support available nationwide.`,
     },
     {
-        name:  'AllenBradley',
-        logo:  '/photos/AllenBradley_logo.png',
-        text:  `Complete Allen-Bradley catalogue – MicroLogix, ControlLogix,
+        name: 'AllenBradley',
+        logo: '/photos/AllenBradley_logo.png',
+        text: `Complete Allen-Bradley catalogue – MicroLogix, ControlLogix,
             Kinetix motion drives, PowerFlex inverters.
             UL-listed enclosure builds and panel retrofits offered on request.`,
     },
     {
-        name:  'Siemens',
-        logo:  '/photos/Siemens_logo.png',
-        text:  `TIA-Portal ready SIMATIC S7-1200 / S7-1500 PLCs, SINAMICS G-series drives,
+        name: 'Siemens',
+        logo: '/photos/Siemens_logo.png',
+        text: `TIA-Portal ready SIMATIC S7-1200 / S7-1500 PLCs, SINAMICS G-series drives,
             and Smart MCC components always in stock.
             We also provide licensed STEP-7 programming services.`,
     },
     {
-        name:  'Nord',
-        logo:  '/photos/Nord_logo.png',
-        text:  `Nord geared motors, Helical-Bevel and Parallel-Shaft options,
+        name: 'Nord',
+        logo: '/photos/Nord_logo.png',
+        text: `Nord geared motors, Helical-Bevel and Parallel-Shaft options,
             torque range 10 Nm – 100 kNm. Custom flanges machined in-house.
             IE3 premium-efficiency motors ship within 48 hours.`,
     },
     {
-        name:  'Schneider',
-        logo:  '/photos/Schneider_logo.png',
-        text:  `Schneider Modicon PLCs, Altivar drives and TeSys contactors.
+        name: 'Schneider',
+        logo: '/photos/Schneider_logo.png',
+        text: `Schneider Modicon PLCs, Altivar drives and TeSys contactors.
             Green Premium components with full RoHS & REACH compliance.
             Panel-builder bundles and OEM tier pricing available.`,
     },
@@ -51,7 +49,7 @@ export default function Home() {
         <div className="min-h-screen overflow-x-hidden bg-primary-50 text-primary-900">
             <CategoryNavbar />
 
-            {/* Animated brand stripe below carousel */}
+            {/* Brand stripe above carousel */}
             <div className="overflow-hidden py-6">
                 <div className="animate-marquee flex w-max gap-16 px-6">
                     {brands.concat(brands).map((b, i) => (
@@ -69,7 +67,7 @@ export default function Home() {
                 <HeroCarousel />
             </Suspense>
 
-            {/* Animated brand stripe below carousel */}
+            {/* Brand stripe below carousel */}
             <div className="overflow-hidden py-6">
                 <div className="animate-marquee flex w-max gap-16 px-6">
                     {brands.concat(brands).map((b, i) => (
@@ -83,31 +81,13 @@ export default function Home() {
                 </div>
             </div>
 
-            <h3 className="mt-6 mb-4 text-center text-2xl font-semibold text-primary-700">
+            <h3 className="text-center text-2xl font-semibold text-primary-700 mb-1">
                 We deal with
             </h3>
 
-            {/* Small animated brand logos for mobile */}
-            <div className="mx-auto mb-10 flex max-w-full gap-6 overflow-x-auto px-6 sm:hidden scroll-smooth snap-x snap-mandatory">
-                {brands.map((b) => (
-                    <div
-                        key={b.name}
-                        className="snap-start flex-shrink-0 w-24 cursor-pointer transition-transform hover:scale-110"
-                        aria-label={b.name}
-                    >
-                        <img
-                            src={b.logo}
-                            alt={`${b.name} logo`}
-                            loading="lazy"
-                            className="h-24 w-auto object-contain"
-                        />
-                    </div>
-                ))}
-            </div>
-
-            {/* Larger brand sections hidden on small screens */}
-            <div className="hidden sm:block">
-                <h2 className="scroll-fade mx-auto mt-16 max-w-6xl px-6 text-center text-4xl font-extrabold">
+            {/* Brand sections always shown */}
+            <div>
+                <h2 className="scroll-fade mx-auto mt-2 max-w-6xl px-6 text-center text-4xl font-extrabold">
                     Trusted Global Brands&nbsp;&nbsp;•&nbsp;&nbsp;Local Engineering Expertise
                 </h2>
 
