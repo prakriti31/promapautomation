@@ -8,14 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-    // root: 'client',
     plugins: [react()],
     build: {
         outDir: resolve(__dirname, 'dist'),
         emptyOutDir: true,
     },
     server: {
-        hmr: false, // make sure hot module reload is disabled in prod
+        hmr: false,
         proxy: {
             '/api': {
                 target: 'http://localhost:8000',
@@ -28,5 +27,10 @@ export default defineConfig({
                 secure: false,
             },
         },
+        fs: {
+            strict: true,
+        },
+        // ✅ This enables fallback for deep links
+        historyApiFallback: true,
     },
 });

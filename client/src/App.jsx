@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -18,34 +18,34 @@ const TermsOfUse = lazy(() => import('./pages/TermsOfUse'));
 
 export default function App() {
     return (
-        <AuthProvider>
-            <Navbar />
-            <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<ProductCatalog />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route
-                        path="/admin"
-                        element={
-                            <ProtectedRoute adminOnly>
-                                <AdminDashboard />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route path="/products/:category/:subcat" element={<SubcategoryPage />} />
-                    <Route path="/cart" element={<CartPage />} />
-                    <Route path="/terms" element={<TermsOfUse />} />
-                    <Route
-                        path="*"
-                        element={<div className="p-10 text-center text-2xl">404</div>}
-                    />
-                </Routes>
-            </Suspense>
-
-            {/* Toast container for global notifications */}
-            <ToastContainer position="top-right" autoClose={2000} />
-        </AuthProvider>
+        <Router>
+            <AuthProvider>
+                <Navbar />
+                <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<ProductCatalog />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route path="/products/:category/:subcat" element={<SubcategoryPage />} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/terms" element={<TermsOfUse />} />
+                        <Route
+                            path="*"
+                            element={<div className="p-10 text-center text-2xl">404</div>}
+                        />
+                    </Routes>
+                </Suspense>
+                <ToastContainer position="top-right" autoClose={2000} />
+            </AuthProvider>
+        </Router>
     );
 }
