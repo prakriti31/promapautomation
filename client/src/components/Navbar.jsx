@@ -38,7 +38,7 @@ export default function Navbar() {
                             className="h-16 w-auto sm:h-20 md:h-24"
                         />
                         <span className="text-xl font-extrabold tracking-wide text-primary-800">
-                            PROMAP Automation
+                            PROMAP Automations
                         </span>
                     </Link>
 

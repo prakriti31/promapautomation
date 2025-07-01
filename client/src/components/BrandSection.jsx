@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
-import useReveal         from '../hooks/useReveal';
+import useReveal from '../hooks/useReveal';
 
-/* one slideshow per brand (5 images named Brand_1…Brand_5 in /public/photos) */
 function BrandCarousel({ brand }) {
     const pics = Array.from({ length: 5 }, (_, i) => `/photos/${brand}_${i + 1}.jpg`);
-    const delay = 15_000 / pics.length;               // 15-second loop
+    const delay = 15_000 / pics.length;
 
     return (
         <div className="relative h-60 w-full overflow-hidden rounded-xl shadow-md">
@@ -13,6 +12,7 @@ function BrandCarousel({ brand }) {
                     key={src}
                     src={src}
                     alt=""
+                    loading="lazy"
                     style={{ animationDelay: `${i * delay}ms` }}
                     className="absolute inset-0 h-full w-full object-cover opacity-0 animate-slideshow"
                 />
@@ -25,7 +25,6 @@ export default function BrandSection({ brand, logo, details, flip = false }) {
     const ref = useRef(null);
     useReveal(ref);
 
-    /* two-column layout, flipped every other section */
     const content = (
         <>
             <div className="flex-1">
@@ -36,6 +35,7 @@ export default function BrandSection({ brand, logo, details, flip = false }) {
                 <img
                     src={logo}
                     alt={`${brand} logo`}
+                    loading="lazy"
                     className="mx-auto h-14 object-contain"
                 />
                 <p className="text-sm leading-relaxed md:text-base">{details}</p>

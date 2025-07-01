@@ -45,7 +45,6 @@ export default function SubcategoryPage() {
                             <img
                                 src={p.photo_url}
                                 alt={p.name}
-                                loading="lazy"
                                 className="h-40 w-full object-cover rounded mb-2"
                             />
                             <h3 className="font-bold text-lg">{p.name}</h3>
