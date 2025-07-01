@@ -5,16 +5,16 @@ module.exports = {
         extend: {
             colors: {
                 primary: {
-                    50:  '#eff6ff',
-                    100: '#dbeafe',
-                    200: '#bfdbfe',
-                    300: '#93c5fd',
-                    400: '#60a5fa',
-                    500: '#3b82f6',
-                    600: '#2563eb',
-                    700: '#1d4ed8',
-                    800: '#1e40af',
-                    900: '#1e3a8a',
+                    50:  '#fdf6f0',  // very light peach
+                    100: '#fae8d9',  // peach cream
+                    200: '#f6d3c2',  // light coral pastel
+                    300: '#f1bfb0',  // muted peach pink
+                    400: '#eca8aa',  // soft blush pink
+                    500: '#d88e96',  // pastel rose
+                    600: '#b76f7b',  // dusty rose
+                    700: '#995d6d',  // muted mauve
+                    800: '#7c495c',  // plum base
+                    900: '#623547',  // deep burgundy rose
                 },
             },
             keyframes: {
